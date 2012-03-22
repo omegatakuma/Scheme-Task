@@ -21,7 +21,7 @@
 			(if (eof-object? words)
 			  (writ 1)
 			  (writ (+ 1 (car (first words))) words))))))
-(define (writ n . words)
+(define (writ . words)
   (call-with-output-file "./.todo"
 	(lambda(out)
 	  (display "ToDo> ")
@@ -30,7 +30,7 @@
 		(display "Date> ")
 		(flush)
 		(let* ((ttime (read))
-			   (result (cons n (cons solve (cons ttime '())))))
+			   (result (cons solve (cons ttime '()))))
 		  (if (null? words)
 			(begin 
 			  (format out (x->string (cons result words)))
@@ -58,10 +58,10 @@
 		  (begin
 			(print "Nothing!!!!!!")
 			(ToDo))
-		  (begin 
+		  (begin
 			(for-each
 			  (lambda(word)
-				(format #t "[~s]~s: ~s\n-> ~s\n" (first word) (third word) (second word) 
+				(format #t "[~s]~s: ~s\n-> ~s\n" (map (lambda(n)n) (iota (length words) 1)) (third word) (second word) 
 						(timer (map (lambda(n)(x->number n)) (string-split (x->string (third word)) #\/)))))
 			  (reverse words))(ToDo)))))))
 (define (del)
