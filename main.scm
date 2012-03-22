@@ -73,7 +73,7 @@
 		(let* ((words (read p)))
 		  (call-with-output-file "./.todo"
 			(lambda(out)
-			  (format out (x->string (delete (ref words (- n 1)) words)))
+			  (format out (x->string (delete (ref (reverse words) (- n 1)) (reverse words))))
 			  (newline out)
 			  (flush out)
 			  (r)
