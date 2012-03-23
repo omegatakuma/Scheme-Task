@@ -8,8 +8,8 @@ ToDo追加
 -------
 `:w`
 
-	>>> :w
-	ToDo> Haskeる
+	?> :w
+	NewTask> Haskeる
 	Date> 2012/5/1
 	[1]|2012/5/1|: Haskeる
 	-> 残り40日です。
