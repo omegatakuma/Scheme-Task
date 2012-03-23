@@ -1,8 +1,14 @@
 #!/usr/local/bin/gosh
 (use srfi-1)
 (use srfi-19)
+(use gauche.process)
+(define clear
+  (let1 c (process-output->string '("clear"))
+    (lambda ()
+      (display c))))
 (define (main args)
-  (print "YES,ToDoList!!!!!!!")
+  (clear)
+  (print "YES,TaskList!!!!!!!")
   (print "-------------------")
   (ToDo))
 (define (ToDo)
@@ -12,7 +18,7 @@
 		(cond ((eq? cmd ':q)(exit))
 			  ((eq? cmd ':w)(w))
 			  ((eq? cmd ':r)(r))
-			  ((eq? cmd ':del)(del))
+			  ((eq? (car (list cmd)) ':del)(del))
 			  (else (begin
 					  (print "***ERROR***\ncommand not found: " cmd)
 					  (ToDo))))))
@@ -78,14 +84,31 @@
 (define (del)
   (display "> ")
   (flush)
-  (let ((n (read)))
-	(call-with-input-file "./.todo"
-	  (lambda(p)
-		(let* ((words (read p)))
-		  (call-with-output-file "./.todo"
-			(lambda(out)
-			  (format out (x->string (delete (ref (reverse words) (- n 1)) (reverse words))))
-			  (newline out)
-			  (flush out)
-			  (r)
-			  (ToDo))))))))
+  (let1 n (read)
+  (call-with-input-file 
+	"./.todo"
+	(lambda(p)
+	  (let1 words (read p)
+		(call-with-output-file 
+		  "./.todo"
+		  (lambda(out)
+			(cond
+			  ((number? n)
+			   (format out (x->string (delete (ref (reverse words) (- n 1)) words)))
+			   (newline out)
+			   (flush out)
+			   (r)
+			   (ToDo))
+			  ((eq? n 'all)
+			   (begin
+				 (display "本当にいいですか？(y/n): ")
+				 (flush)
+				 (let1 ans (read)
+					   (if (eq? ans 'y)
+						 (begin
+						   (format out (x->string (filter symbol? words)))
+						   (newline out)
+						   (flush)
+						   (ToDo))
+						 (ToDo)))))
+			  (else (print "***ERROR command not found: " n))))))))))
