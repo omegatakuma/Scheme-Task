@@ -14,7 +14,7 @@
 		(cond ((eq? cmd ':q)(exit))
 			  ((eq? cmd ':w)(w))
 			  ((eq? cmd ':r)(r))
-			  ((eq? (car (list cmd)) ':del)(del))
+			  ((eq? cmd ':del)(del))
 			  (else (begin
 					  (print "***ERROR***\ncommand not found: " cmd)
 					  (ToDo))))))
@@ -30,14 +30,14 @@
   (flush)
   (let1 solve (read)
 		(if (eq? solve ':q)
-		  (ToDo)
+		  (r)
 		  (begin
 			(display "Date> ")
 			(flush)
 			(let1 ttime (read)
 				  (if (eq? ttime ':q)
-					  (ToDo)
-					  (writ solve ttime words)))))))
+					(r)
+					(writ solve ttime words)))))))
 (define (writ solve ttime words)
   (call-with-output-file "./.todo"
 	(lambda(out)
@@ -47,12 +47,12 @@
 				(format out (x->string (cons result words)))
 				(newline out)
 				(flush out)
-				(r))
+				(w))
 			  (begin 
 				(format out (x->string (cons result (car words))))
 				(newline out)
 				(flush out)
-				(r)))))))
+				(w)))))))
 (define (timer result)
   (let*	((date1 (make-date 0 0 0 0 (date-day(current-date)) (date-month(current-date))  (date-year(current-date)) (date-zone-offset (current-date))))
 		 (date2 (make-date 0 0 0 0 (third result) (second result) (first result) (date-zone-offset (current-date)))))
@@ -60,26 +60,25 @@
 			  ((eqv? (date->modified-julian-day date1) (date->modified-julian-day date2))'期限日です。)
 			  (else (string->symbol (string-append "残り" (x->string (- (date->modified-julian-day date2) (date->modified-julian-day date1))) "日です。" ))))))
 (define (r)
-  (call-with-input-file "./.todo"
+  (call-with-input-file 
+	"./.todo"
 	(lambda(p)
 	  (let ((words (read p)))
 		(cond ((eof-object? words)
-		  (begin
-			(print "Nothing!!!!!!")
-			(ToDo)))
-		  ((null? words)
-		   (begin 
-			 (print "Nothing!!!!!!")
-			 (ToDo)))
-		  (else (begin
-			(for-each
-			  (lambda(word n)
-				(format #t "[~s]~s: ~s\n-> ~s\n" n (second word) (first word) 
-						(timer (map (lambda(n)(x->number n)) (string-split (x->string (second word)) #\/)))))
-			  (reverse words)(iota (length words) 1))(ToDo))))))))
+			   (begin
+				 (print "Nothing!!!!!!")
+				 (ToDo)))
+			  ((null? words)
+			   (begin 
+				 (print "Nothing!!!!!!")
+				 (ToDo)))
+			  (else (begin
+					  (for-each
+						(lambda(word n)
+						  (format #t "[~s]~s: ~s\n-> ~s\n" n (second word) (first word) 
+								  (timer (map (lambda(n)(x->number n)) (string-split (x->string (second word)) #\/)))))
+						(reverse words)(iota (length words) 1))(ToDo))))))))
 (define (del)
-  (display "> ")
-  (flush)
   (let1 n (read)
   (call-with-input-file 
 	"./.todo"
@@ -95,7 +94,7 @@
 			   (flush out)
 			   (r)
 			   (ToDo))
-			  ((eq? n 'all)
+			  ((eq? n '-a)
 			   (begin
 				 (display "本当にいいですか？(y/n): ")
 				 (flush)
