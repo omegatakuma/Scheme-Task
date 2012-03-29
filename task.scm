@@ -3,6 +3,7 @@
 (use srfi-19)
 (use gauche.process)
 (use gauche.parseopt)
+(use file.util)
 (define clear
   (let1 c (process-output->string '("clear"))
     (lambda ()
@@ -19,7 +20,7 @@
 					  (print "***ERROR***\ncommand not found: " cmd)
 					  (ToDo))))))
 (define (w)
-  (call-with-input-file "~/SchemeToDo/.todo" 
+  (call-with-input-file (string-append (home-directory) "/SchemeToDo/.todo")
 	(lambda(p) 
 	  (let1 words (read p)
 			(if (eof-object? words)
@@ -39,7 +40,7 @@
 					(r)
 					(writ solve ttime words)))))))
 (define (writ solve ttime words)
-  (call-with-output-file "~/SchemeToDo/.todo"
+  (call-with-output-file  (string-append (home-directory) "/SchemeToDo/.todo")
 	(lambda(out)
 	  (let1 result (cons solve (cons ttime '()))
 			(if (null? words)
@@ -59,9 +60,8 @@
 		(cond ((> (date->modified-julian-day date1) (date->modified-julian-day date2))'期限過ぎてます。)
 			  ((eqv? (date->modified-julian-day date1) (date->modified-julian-day date2))'期限日です。)
 			  (else (string->symbol (string-append "残り" (x->string (- (date->modified-julian-day date2) (date->modified-julian-day date1))) "日です。" ))))))
-(define (r)
-  (call-with-input-file 
-	"./.todo"
+(define (r . only)
+  (call-with-input-file  (string-append (home-directory) "/SchemeToDo/.todo")
 	(lambda(p)
 	  (let ((words (read p)))
 		(cond ((eof-object? words)
@@ -77,15 +77,15 @@
 						(lambda(word n)
 						  (format #t "[~s]~s: ~s\n-> ~s\n" n (second word) (first word) 
 								  (timer (map (lambda(n)(x->number n)) (string-split (x->string (second word)) #\/)))))
-						(reverse words)(iota (length words) 1))(ToDo))))))))
+						(reverse words)(iota (length words) 1))
+					  (begin
+						(if (null? only)(ToDo)(exit))))))))))
 (define (del)
   (let1 n (read)
-  (call-with-input-file 
-	"~/SchemeToDo/.todo"
+  (call-with-input-file  (string-append (home-directory) "/SchemeToDo/.todo")
 	(lambda(p)
 	  (let1 words (read p)
-		(call-with-output-file 
-		  "~/SchemeToDo/.todo"
+		(call-with-output-file  (string-append (home-directory) "/SchemeToDo/.todo")
 		  (lambda(out)
 			(cond
 			  ((number? n)
@@ -110,7 +110,7 @@
 (define (main args)
   (let-args (cdr args)
 			((w "w|write" => w)
-			 (r "r|read" => r)
+			 (r "r|read" => (r 'only))
 			 (d "d|del" => del))
 			(clear)
 			(print "YES,TaskList!!!!!!!")
