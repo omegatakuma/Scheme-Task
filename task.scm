@@ -4,6 +4,7 @@
 (use gauche.process)
 (use gauche.parseopt)
 (use file.util)
+
 (define clear
   (let1 c (process-output->string '("clear"))
     (lambda ()
