@@ -19,7 +19,7 @@
 					  (print "***ERROR***\ncommand not found: " cmd)
 					  (ToDo))))))
 (define (w)
-  (call-with-input-file "./.todo" 
+  (call-with-input-file "~/SchemeToDo/.todo" 
 	(lambda(p) 
 	  (let1 words (read p)
 			(if (eof-object? words)
@@ -39,7 +39,7 @@
 					(r)
 					(writ solve ttime words)))))))
 (define (writ solve ttime words)
-  (call-with-output-file "./.todo"
+  (call-with-output-file "~/SchemeToDo/.todo"
 	(lambda(out)
 	  (let1 result (cons solve (cons ttime '()))
 			(if (null? words)
@@ -81,11 +81,11 @@
 (define (del)
   (let1 n (read)
   (call-with-input-file 
-	"./.todo"
+	"~/SchemeToDo/.todo"
 	(lambda(p)
 	  (let1 words (read p)
 		(call-with-output-file 
-		  "./.todo"
+		  "~/SchemeToDo/.todo"
 		  (lambda(out)
 			(cond
 			  ((number? n)
