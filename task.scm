@@ -50,7 +50,15 @@
   (w))
 (define (timer result)
   (let*	((date1 
+<<<<<<< HEAD
 		   (make-date 0 0 0 0 (date-day(current-date))(date-month(current-date))(date-year(current-date))(date-zone-offset (current-date))))
+=======
+		   (make-date 0 0 0 0 
+					  (date-day(current-date)) 
+					  (date-month(current-date))
+					  (date-year(current-date)) 
+					  (date-zone-offset (current-date))))
+>>>>>>> task_ver
 		 (date2 (make-date 0 0 0 0 
 						   (third result) 
 						   (second result) 
@@ -105,4 +113,8 @@
 			(clear)
 			(print "YES,TaskList!!!!!!!!")
 			(print "-------------------")
+<<<<<<< HEAD
 			(ToDo)))
+=======
+			(ToDo)))
+>>>>>>> task_ver
