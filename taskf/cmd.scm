@@ -5,7 +5,6 @@
 			   (use file.util)
 			   (export clear ToDo w r del))
 (select-module lib.func)
-
 (define clear
   (let1 c (process-output->string '("clear"))
 		(lambda ()
@@ -98,4 +97,4 @@
 												   '())))
 										  (else (string-append "***ERROR command not found: "n)))))
 			  (ToDo))))
-;(provide "lib/func")
+(provide "taskf/cmd")
