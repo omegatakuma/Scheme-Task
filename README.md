@@ -5,6 +5,15 @@ ToDoを管理するスクリプト
 使い方
 ------
 
+インストール
+------------
+
+	% git clone git://github.com/omegatakuma/SchemeToDo.git SchemeToDo
+	% cd SchemeToDo
+	% make
+
+`task`がコマンドとして使えます。
+
 ToDo追加
 -------
 `./task.scm -w`
