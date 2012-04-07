@@ -1,8 +1,4 @@
 #!/usr/local/bin/gosh
-(use srfi-1)
-(use srfi-19)
-(use gauche.process)
-(use file.util)
 (use gauche.parseopt)
 (use taskf.cmd)
 (define (main args)
