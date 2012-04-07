@@ -1,10 +1,10 @@
-(define-module lib.func
+(define-module taskf.cmd
 			   (use srfi-1)
 			   (use srfi-19)
 			   (use gauche.process)
 			   (use file.util)
 			   (export clear ToDo w r del))
-(select-module lib.func)
+(select-module taskf.cmd)
 (define clear
   (let1 c (process-output->string '("clear"))
 		(lambda ()
@@ -22,7 +22,7 @@
 					  (ToDo))))))
 (define (w)
   (let1 words (with-input-from-file 
-				(string-append (home-directory) "/SchemeToDo/.todo") 
+				(string-append (home-directory) "/SchemeTask/.todo") 
 				(pa$ read))
 		(if (eof-object? words)
 		  (writ (create) '())
@@ -42,7 +42,7 @@
 					(cons solve (cons ttime '()))))))))
 (define (writ result words)
   (with-output-to-file 
-	(string-append (home-directory) "/SchemeToDo/.todo")
+	(string-append (home-directory) "/SchemeTask/.todo")
 	(pa$ print
 		 (if (null? words)
 		   (x->string (cons result words))
@@ -64,7 +64,7 @@
 									   (- (date->modified-julian-day date2) 
 										  (date->modified-julian-day date1)))"日です。"))))))
 (define (r)
-  (let1 words (with-input-from-file (string-append (home-directory) "/SchemeTodo/.todo") (pa$ read))
+  (let1 words (with-input-from-file (string-append (home-directory) "/SchemeTask/.todo") (pa$ read))
 		(cond ((eof-object? words)
 			   (begin
 				 (print "Nothing!!!!!!")
@@ -82,7 +82,7 @@
 (define (del)
   (let1 n (read)
 		(let1 words (with-input-from-file 
-					  (string-append (home-directory) "/SchemeToDo/.todo") (pa$ read))
+					  (string-append (home-directory) "/SchemeTask/.todo") (pa$ read))
 			  (with-output-to-file (string-append (home-directory) "/SchemeToDo/.todo")
 								   (pa$ print
 										(cond
